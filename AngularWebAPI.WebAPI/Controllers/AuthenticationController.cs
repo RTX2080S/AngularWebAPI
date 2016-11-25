@@ -15,7 +15,7 @@ namespace AngularWebAPI.WebAPI.Controllers
         {
             /* REPLACE THIS WITH REAL AUTHENTICATION
             ----------------------------------------------*/
-            if (!(viewModel.Username == "test" && viewModel.Password == "test"))
+            if (!(viewModel.Username == "steven" && viewModel.Password == "1q2w3e"))
             {
                 return Ok(new { success = false, message = "User code or password is incorrect" });
             }

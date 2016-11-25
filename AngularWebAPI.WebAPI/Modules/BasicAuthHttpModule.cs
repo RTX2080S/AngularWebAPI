@@ -40,7 +40,7 @@ namespace AngularWebAPI.WebAPI.Modules
 
             /* REPLACE THIS WITH REAL AUTHENTICATION
             ----------------------------------------------*/
-            if (!(username == "test" && password == "test"))
+            if (!(username == "steven" && password == "1q2w3e"))
             {
                 return false;
             }
