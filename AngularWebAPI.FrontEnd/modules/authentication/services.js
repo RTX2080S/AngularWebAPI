@@ -2,7 +2,7 @@
 
 angular.module('Authentication')
 
-.factory('AuthenticationService', 
+.factory('AuthenticationService',
     ['Base64', '$http', '$cookieStore', '$rootScope',
     function (Base64, $http, $cookieStore, $rootScope) {
         var service = {};

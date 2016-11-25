@@ -2,7 +2,7 @@
 
 angular.module('Home')
 
-.factory('HomeService', 
+.factory('HomeService',
     ['$http',
     function ($http) {
         var service = {};
