@@ -19,7 +19,7 @@ namespace AngularWebAPI.WebAPI.Modules
             context.AuthenticateRequest += OnApplicationAuthenticateRequest;
             context.EndRequest += OnApplicationEndRequest;
         }
-        
+
         private static void SetPrincipal(IPrincipal principal)
         {
             Thread.CurrentPrincipal = principal;
@@ -29,26 +29,33 @@ namespace AngularWebAPI.WebAPI.Modules
             }
         }
 
-        private static bool AuthenticateUser(string credentials)
+        private static void AuthenticateUser(string credentials)
         {
-            var encoding = Encoding.GetEncoding("iso-8859-1");
-            credentials = encoding.GetString(Convert.FromBase64String(credentials));
-
-            var credentialsArray = credentials.Split(':');
-            var username = credentialsArray[0];
-            var password = credentialsArray[1];
-
-            /* REPLACE THIS WITH REAL AUTHENTICATION
-            ----------------------------------------------*/
-            if (!(username == "steven" && password == "1q2w3e"))
+            try
             {
-                return false;
+                var encoding = Encoding.GetEncoding("iso-8859-1");
+                credentials = encoding.GetString(Convert.FromBase64String(credentials));
+
+                int separator = credentials.IndexOf(':');
+                string name = credentials.Substring(0, separator);
+                string password = credentials.Substring(separator + 1);
+
+                if (CheckPassword(name, password))
+                {
+                    var identity = new GenericIdentity(name);
+                    SetPrincipal(new GenericPrincipal(identity, null));
+                }
+                else
+                {
+                    // Invalid username or password.
+                    HttpContext.Current.Response.StatusCode = 401;
+                }
             }
-
-            var identity = new GenericIdentity(username);
-            SetPrincipal(new GenericPrincipal(identity, null));
-
-            return true;
+            catch (FormatException)
+            {
+                // Credentials were not formatted correctly.
+                HttpContext.Current.Response.StatusCode = 401;
+            }
         }
 
         private static void OnApplicationAuthenticateRequest(object sender, EventArgs e)
@@ -76,6 +83,12 @@ namespace AngularWebAPI.WebAPI.Modules
             {
                 response.Headers.Add("WWW-Authenticate", string.Format("Basic realm=\"{0}\"", Realm));
             }
+        }
+
+        // TODO: Here is where you would validate the username and password.
+        private static bool CheckPassword(string username, string password)
+        {
+            return username == "steven" && password == "1q2w3e";
         }
 
         public void Dispose()
